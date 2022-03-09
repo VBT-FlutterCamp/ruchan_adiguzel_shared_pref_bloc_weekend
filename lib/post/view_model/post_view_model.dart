@@ -1,11 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:ruchan_adiguzel_shared_pref/local/local_manager.dart';
-
+import '../../local/local_manager.dart';
 import '../model/post_model.dart';
 import '../service/post_service.dart';
 

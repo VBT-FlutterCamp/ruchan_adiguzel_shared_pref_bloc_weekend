@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:vexana/vexana.dart';
 
 class LocalManager {
   static final LocalManager _instance = LocalManager._init();

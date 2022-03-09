@@ -1,5 +1,6 @@
-import '../model/post_model.dart';
 import 'package:vexana/vexana.dart';
+
+import '../model/post_model.dart';
 
 abstract class IPostService {
   final INetworkManager networkManager;

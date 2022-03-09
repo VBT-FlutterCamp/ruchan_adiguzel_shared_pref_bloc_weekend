@@ -1,8 +1,9 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ruchan_adiguzel_shared_pref/core/service/service.dart';
-import 'package:ruchan_adiguzel_shared_pref/local/local_manager.dart';
-import 'package:ruchan_adiguzel_shared_pref/post/service/post_service.dart';
+import '../../core/service/service.dart';
+import '../service/post_service.dart';
 import '../view_model/post_view_model.dart';
 
 class PostView extends StatelessWidget {
@@ -11,49 +12,66 @@ class PostView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Bloc SharedPref")),
+      appBar: AppBar(title: const Text("Bloc SharedPref")),
       body: BlocProvider(
         create: (context) =>
             PostCubit(PostService(NetworkService.instance.networkManager)),
         child: BlocConsumer<PostCubit, PostState>(
-          listener: (context, state) {
-            // TODO: implement listener
-          },
+          listener: (context, state) {},
           builder: (context, state) {
             if (state is PostFromLocale) {
-              return Center(
-                  child: Column(
-                children: [
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Text(state.model_from_locale?.body ?? "null"),
-                    ),
-                  ),
-                  ElevatedButton(
-                      onPressed: () => context.read<PostCubit>().getModel(),
-                      child: Text("Get data again"))
-                ],
-              ));
+              return DataFromLocaleWidget(state, context);
             } else if (state is PostWaiting) {
-              return Center(
-                  child: Column(
-                children: [
-                  TextButton(
-                      onPressed: () {
-                        context.read<PostCubit>().getModel();
-                      },
-                      child: Text("buton")),
-                  CircularProgressIndicator(),
-                ],
-              ));
+              return const StateNeutrolWidget();
             }
-            return Center(
-              child: Text("wtf"),
-            );
+            return ExceptionText();
           },
         ),
       ),
     );
+  }
+
+  Center ExceptionText() {
+    return const Center(
+      child: Text("wtf"),
+    );
+  }
+
+  Center DataFromLocaleWidget(PostFromLocale state, BuildContext context) {
+    return Center(
+        child: Column(
+      children: [
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Text(state.model_from_locale?.body ?? "null"),
+          ),
+        ),
+        ElevatedButton(
+            onPressed: () => context.read<PostCubit>().getModel(),
+            child: const Text("Get data again"))
+      ],
+    ));
+  }
+}
+
+class StateNeutrolWidget extends StatelessWidget {
+  const StateNeutrolWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+        child: Column(
+      children: [
+        TextButton(
+            onPressed: () {
+              context.read<PostCubit>().getModel();
+            },
+            child: const Text("buton")),
+        const CircularProgressIndicator(),
+      ],
+    ));
   }
 }

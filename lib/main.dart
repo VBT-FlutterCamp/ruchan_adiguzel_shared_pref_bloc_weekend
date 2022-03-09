@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ruchan_adiguzel_shared_pref/local/local_manager.dart';
+import 'local/local_manager.dart';
 
 import 'post/view/post_view.dart';
 
