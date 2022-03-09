@@ -25,12 +25,8 @@ class LocalManager {
   String getStringValue(PreferencesKey key) =>
       _preferences?.getString(key.toString()) ?? "";
 
-  T getDynamicValue<T extends INetworkModel>(PreferencesKey key, T model) {
-    final body = getStringValue(key);
-    if (body.isNotEmpty) {
-      return model.fromJson(jsonDecode(body));
-    }
-    return model;
+  Future<void> setDynamicJson<T>(PreferencesKey key, T model) async {
+    await _preferences?.setString(key.toString(), jsonEncode(model));
   }
 }
 

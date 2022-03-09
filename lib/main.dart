@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:ruchan_adiguzel_shared_pref/local/local_manager.dart';
 
 import 'post/view/post_view.dart';
 
-void main() => runApp(MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await LocalManager.preferenceInit();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override

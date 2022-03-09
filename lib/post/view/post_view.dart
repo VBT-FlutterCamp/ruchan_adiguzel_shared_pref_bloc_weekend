@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ruchan_adiguzel_shared_pref/core/service/service.dart';
+import 'package:ruchan_adiguzel_shared_pref/local/local_manager.dart';
 import 'package:ruchan_adiguzel_shared_pref/post/service/post_service.dart';
 import '../view_model/post_view_model.dart';
 
@@ -28,7 +29,7 @@ class PostView extends StatelessWidget {
                 ),
               ));
             } else if (state is PostInitial) {
-              return CircularProgressIndicator();
+              return Center(child: CircularProgressIndicator());
             }
             return Center(
               child: Text("wtf"),
