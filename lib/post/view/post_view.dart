@@ -35,8 +35,9 @@ class PostView extends StatelessWidget {
   Center GetTextBtn(BuildContext context) {
     return Center(
         child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        TextButton(
+        ElevatedButton(
             onPressed: () {
               if (context.read<PostCubit>().model == null) {
                 context.read<PostCubit>().getModel();
@@ -47,7 +48,7 @@ class PostView extends StatelessWidget {
                 ));
               }
             },
-            child: const Text("buton")),
+            child: const Text("Get data")),
         const CircularProgressIndicator(),
       ],
     ));
