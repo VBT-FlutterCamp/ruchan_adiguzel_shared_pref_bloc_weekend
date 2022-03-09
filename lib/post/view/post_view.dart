@@ -20,16 +20,33 @@ class PostView extends StatelessWidget {
             // TODO: implement listener
           },
           builder: (context, state) {
-            if (state is PostDone) {
+            if (state is PostFromLocale) {
               return Center(
-                  child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Text(state.post_model?.body ?? "null"),
-                ),
+                  child: Column(
+                children: [
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Text(state.model_from_locale?.body ?? "null"),
+                    ),
+                  ),
+                  ElevatedButton(
+                      onPressed: () => context.read<PostCubit>().getModel(),
+                      child: Text("Get data again"))
+                ],
               ));
-            } else if (state is PostInitial) {
-              return Center(child: CircularProgressIndicator());
+            } else if (state is PostWaiting) {
+              return Center(
+                  child: Column(
+                children: [
+                  TextButton(
+                      onPressed: () {
+                        context.read<PostCubit>().getModel();
+                      },
+                      child: Text("buton")),
+                  CircularProgressIndicator(),
+                ],
+              ));
             }
             return Center(
               child: Text("wtf"),

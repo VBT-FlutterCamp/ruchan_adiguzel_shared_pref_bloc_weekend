@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:ruchan_adiguzel_shared_pref/local/local_manager.dart';
 
 import '../model/post_model.dart';
@@ -9,7 +11,7 @@ import '../service/post_service.dart';
 
 class PostCubit extends Cubit<PostState> {
   PostCubit(this.postService) : super(PostInitial()) {
-    getModel();
+    emit(PostWaiting());
   }
 
   LocalManager manager = LocalManager.instance;
@@ -17,22 +19,18 @@ class PostCubit extends Cubit<PostState> {
   IPostService? postService;
 
   Future<void> getModel() async {
-    Post_Model? local_model;
-    if (local_model == null) {
-      final model = await postService?.getPostData();
-      if (model == null) {
-        return;
-      } else {
-        manager.setDynamicJson(PreferencesKey.model_body, model);
-        final local_model_String =
-            manager.getStringValue(PreferencesKey.model_body);
-        local_model = Post_Model.fromJson(jsonDecode(local_model_String));
-        emit(PostDone(local_model));
-        log("lokale indirildi");
-      }
+    log("tuşa basıldı");
+    if (model == null) {
+      final temp_model = await postService?.getPostData();
+
+      manager.setDynamicJson(PreferencesKey.model_body, temp_model);
+      final local_model_String =
+          manager.getStringValue(PreferencesKey.model_body);
+      model = Post_Model.fromJson(jsonDecode(local_model_String));
+      log("lokale indirildi");
+      emit(PostFromLocale(model));
     } else {
       log("lokalden çekildi");
-      emit(PostDone(local_model));
     }
   }
 }
@@ -41,10 +39,11 @@ abstract class PostState {}
 
 class PostInitial extends PostState {}
 
-class PostDone extends PostState {
-  PostDone(this.post_model);
+class PostWaiting extends PostState {}
 
-  final Post_Model? post_model;
+class PostDone extends PostState {}
+
+class PostFromLocale extends PostState {
+  PostFromLocale(this.model_from_locale);
+  final Post_Model? model_from_locale;
 }
-
-class PostFromLocale extends PostState {}
