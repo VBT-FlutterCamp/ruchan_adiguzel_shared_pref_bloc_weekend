@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../local/local_manager.dart';
@@ -17,7 +18,6 @@ class PostCubit extends Cubit<PostState> {
   IPostService? postService;
 
   Future<void> getModel() async {
-    log("tuşa basıldı");
     if (model == null) {
       final temp_model = await postService?.getPostData();
 
@@ -27,8 +27,6 @@ class PostCubit extends Cubit<PostState> {
       model = Post_Model.fromJson(jsonDecode(local_model_String));
       log("lokale indirildi");
       emit(PostFromLocale(model));
-    } else {
-      log("lokalden çekildi");
     }
   }
 }

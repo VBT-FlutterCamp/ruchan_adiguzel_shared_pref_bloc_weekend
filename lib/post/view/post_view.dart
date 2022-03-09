@@ -11,6 +11,7 @@ class PostView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String null_string = "Null value";
     return Scaffold(
       appBar: AppBar(title: const Text("Bloc SharedPref")),
       body: BlocProvider(
@@ -20,9 +21,9 @@ class PostView extends StatelessWidget {
           listener: (context, state) {},
           builder: (context, state) {
             if (state is PostFromLocale) {
-              return DataFromLocaleWidget(state, context);
+              return DataFromLocaleWidget(state, context, null_string);
             } else if (state is PostWaiting) {
-              return const StateNeutrolWidget();
+              return GetTextBtn(context);
             }
             return ExceptionText();
           },
@@ -31,46 +32,68 @@ class PostView extends StatelessWidget {
     );
   }
 
+  Center GetTextBtn(BuildContext context) {
+    return Center(
+        child: Column(
+      children: [
+        TextButton(
+            onPressed: () {
+              if (context.read<PostCubit>().model == null) {
+                context.read<PostCubit>().getModel();
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text("Data already fetched"),
+                  action: SnackBarAction(label: "ok", onPressed: () {}),
+                ));
+              }
+            },
+            child: const Text("buton")),
+        const CircularProgressIndicator(),
+      ],
+    ));
+  }
+
   Center ExceptionText() {
     return const Center(
       child: Text("wtf"),
     );
   }
 
-  Center DataFromLocaleWidget(PostFromLocale state, BuildContext context) {
+  Center DataFromLocaleWidget(
+      PostFromLocale state, BuildContext context, null_string) {
     return Center(
         child: Column(
       children: [
         Card(
           child: Padding(
             padding: const EdgeInsets.all(20),
-            child: Text(state.model_from_locale?.body ?? "null"),
+            child: Column(
+              children: [
+                Text(
+                  state.model_from_locale?.title ?? null_string,
+                  style: Theme.of(context).textTheme.headline5,
+                ),
+                Divider(),
+                Text(state.model_from_locale?.body ?? null_string),
+              ],
+            ),
           ),
         ),
         ElevatedButton(
-            onPressed: () => context.read<PostCubit>().getModel(),
-            child: const Text("Get data again"))
-      ],
-    ));
-  }
-}
-
-class StateNeutrolWidget extends StatelessWidget {
-  const StateNeutrolWidget({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-        child: Column(
-      children: [
-        TextButton(
             onPressed: () {
-              context.read<PostCubit>().getModel();
+              if (state.model_from_locale == null) {
+                context.read<PostCubit>().getModel();
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text("Data already fetched"),
+                  action: SnackBarAction(label: "ok", onPressed: () {}),
+                  duration: Duration(seconds: 3),
+                  shape: StadiumBorder(),
+                  behavior: SnackBarBehavior.floating,
+                ));
+              }
             },
-            child: const Text("buton")),
-        const CircularProgressIndicator(),
+            child: const Text("Get data again"))
       ],
     ));
   }
